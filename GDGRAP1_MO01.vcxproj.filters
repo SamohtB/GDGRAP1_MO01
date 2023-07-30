@@ -48,13 +48,37 @@
     <ClInclude Include="Model\BaseClass\Texture\SkyBox.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Tank.hpp">
+    <ClInclude Include="Model\Player\Tank.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\BaseClass\Camera\CameraData.hpp">
+    <ClInclude Include="Model\Camera\CameraData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\BaseClass\Light\LightData.hpp">
+    <ClInclude Include="Model\Light\LightData.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Light\Light.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Light\PointLight.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Light\DirectionalLight.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Camera\Camera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Camera\PerspectiveCamera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Camera\OrthographicCamera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Player\Player.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Clutter\Clutter.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -86,8 +110,40 @@
     <ClCompile Include="Model\BaseClass\Texture\SkyBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Tank.cpp">
+    <ClCompile Include="Model\Player\Tank.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Light\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Light\PointLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Light\DirectionalLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Camera\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Camera\PerspectiveCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Camera\OrthographicCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Player\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Clutter\Clutter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Shaders\tank.vert" />
+    <CopyFileToFolders Include="Shaders\tank.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\clutter.vert" />
+    <None Include="Shaders\clutter.frag" />
   </ItemGroup>
 </Project>

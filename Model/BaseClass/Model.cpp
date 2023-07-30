@@ -8,6 +8,9 @@ using namespace base_class;
 Model::Model(std::string strModel) 
 {
 	LoadModel(strModel);
+
+    glGenVertexArrays(1, &this->VAO);
+    glGenBuffers(1, &this->VBO);
 }
 
 Model::~Model()
@@ -111,6 +114,11 @@ void Model::LoadModel(std::string strMesh)
 GLuint Model::GetVAO()
 {
     return this->VAO;
+}
+
+GLuint Model::GetVBO()
+{
+    return this->VBO;
 }
 
 std::vector<GLfloat> Model::GetVertexData()

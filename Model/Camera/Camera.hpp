@@ -24,6 +24,7 @@ namespace camera
 			void MovePositionAndCenter(glm::vec3 pos, glm::vec3 center);
 
 			glm::mat4 GetViewMatrix();
+			Transform* GetTransform();
 
 			virtual glm::mat4 GetProjectionMatrix() = 0;
 			virtual CameraData GetCameraData() = 0;

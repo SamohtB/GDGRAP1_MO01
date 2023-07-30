@@ -7,6 +7,7 @@
 
 namespace light
 {
+	using namespace base_class;
 	class PointLight : public Light
 	{
 		public:
@@ -14,6 +15,7 @@ namespace light
 
 			void SetLightData(LightData data);
 			LightData GetLightData();
+			Transform* GetTransform();
 
 		private:
 			Transform* transform;

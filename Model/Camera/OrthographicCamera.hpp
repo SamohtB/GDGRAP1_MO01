@@ -19,6 +19,6 @@ namespace camera
 
 		private:
 			float size;
-	}
+	};
 }
 #endif // !CAMERA_ORTHOGRAPHIC_CAMERA_HPP

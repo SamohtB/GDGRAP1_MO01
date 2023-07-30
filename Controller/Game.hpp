@@ -12,18 +12,23 @@
 
 #include "../Config/Settings.hpp"
 
+#include "../Model/Player/Player.hpp"
+#include "../Model/Clutter/Clutter.hpp"
+
 namespace Controller
 {
+	using namespace entity;
 
 	class Game
 	{
 		public:
 			Game();
-			//void DebugInit();
 			void Run();
 
 		private:
 			/* GameObjects */
+			Player* player;
+			std::vector<Clutter*> clutterList;
 
 		private:
 			void Initialize();
@@ -33,9 +38,6 @@ namespace Controller
 
 		private:
 			GLFWwindow* gameWindow;
-
-		private:
-			//Debug test;
 
 	};
 }

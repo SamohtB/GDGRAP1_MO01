@@ -32,3 +32,8 @@ LightData PointLight::GetLightData()
 
 	return data;
 }
+
+Transform* PointLight::GetTransform()
+{
+	return this->transform;
+}

@@ -4,11 +4,9 @@
 
 #include <string>
 #include "LightData.hpp"
-#include "../BaseClass/Transform/Transform.hpp"
 
 namespace light
 {
-	using namespace base_class;
 	class Light
 	{
 		public:

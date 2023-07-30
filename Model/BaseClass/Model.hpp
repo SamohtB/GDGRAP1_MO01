@@ -18,6 +18,7 @@ namespace base_class
 			~Model();
 
 			GLuint GetVAO();
+			GLuint GetVBO();
 			std::vector<GLfloat> GetVertexData();
 
 		private:

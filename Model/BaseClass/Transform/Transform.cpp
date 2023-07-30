@@ -171,7 +171,7 @@ glm::mat4 Transform::GetModelMatrix()
 {
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, position + local_position);
-	model_matrix = glm::scale(model_matrix, scale + local_scale);
+	model_matrix = glm::scale(model_matrix, scale * local_scale);
 	model_matrix = glm::rotate(model_matrix, glm::radians(pitch + local_pitch), glm::vec3(1.f, 0.f, 0.f));
 	model_matrix = glm::rotate(model_matrix, glm::radians(yaw + local_yaw), glm::vec3(0.f, 1.f, 0.f));
 	model_matrix = glm::rotate(model_matrix, glm::radians(roll + local_roll), glm::vec3(0.f, 0.f, 1.f));

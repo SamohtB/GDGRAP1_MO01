@@ -50,3 +50,8 @@ glm::mat4 Camera::GetViewMatrix()
 {
 	return glm::lookAt(this->transform->GetPosition(), this->cameraCenter, WORLD_UP);
 }
+
+Transform* Camera::GetTransform()
+{
+	return this->transform;
+}
