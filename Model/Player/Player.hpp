@@ -5,7 +5,9 @@
 #include "Tank.hpp"
 #include "../Camera/PerspectiveCamera.hpp"
 #include "../Light/PointLight.hpp"
+
 #include "EnumLightIntensity.hpp"
+#include "EnumActiveCamera.hpp"
 
 namespace entity
 {
@@ -25,11 +27,18 @@ namespace entity
 			LightData GetPointLightData();
 
 		private:
+			void CreateFirstPersonCam();
+			void CreateThirdPersonCam();
+			const glm::highp_vec3& PointForward();
+
+		private:
 			Tank* pTank;
 			PointLight* pTankLight;
-			PerspectiveCamera* pTankCamera;
+			PerspectiveCamera* pThirdPersonCam;
+			PerspectiveCamera* pFirstPersonCam;
 
 			LampIntensity ECurrentLightIntensity;
+			ActiveCamera ECurrentActiveCamera;
 
 		private:
 			bool bKey_W;
@@ -39,7 +48,9 @@ namespace entity
 			bool bKey_Q;
 			bool bKey_E;
 			bool bKey_F;
+
 			bool bLampToggle;
+			bool bCameraToggle;
 
 		private:
 			const float fMoveSpeed = 100.0f;
@@ -47,18 +58,7 @@ namespace entity
 			const float LOW_INTENSITY = 50.0f;
 			const float MID_INTENSITY = 200.0f;
 			const float HIGH_INTENSITY = 500.0f;
-
-	private:
-		const LightData startLightData
-		{
-			light_position = glm::vec3(0.0f, 0.0f, 0.0f),
-			light_color = glm::vec3(1.0f, 1.0f, 1.0f),
-			ambient_color = glm::vec3(1.0f, 1.0f, 1.0f),
-			ambient_str = 0.2f,
-			spec_str = 0.5f,
-			spec_phong = 16.0f,
-			intensity = LOW_INTENSITY
-		}
+		
 	};
 }
 

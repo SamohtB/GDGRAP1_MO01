@@ -46,6 +46,16 @@ void Camera::MovePositionAndCenter(glm::vec3 pos, glm::vec3 center)
 	this->MoveCenter(center);
 }
 
+void Camera::SetNearPlane(float near)
+{
+	nearPlane = near;
+}
+
+void Camera::SetFarPlane(float far)
+{
+	farPlane = far;
+}
+
 glm::mat4 Camera::GetViewMatrix()
 {
 	return glm::lookAt(this->transform->GetPosition(), this->cameraCenter, WORLD_UP);

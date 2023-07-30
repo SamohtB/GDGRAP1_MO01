@@ -12,8 +12,22 @@ Player::Player()
 	bKey_Q = false;
 	bKey_E = false;
 	bKey_F = false;
+
 	bLampToggle = false;
+	bCameraToggle = false;
+
 	this->ECurrentLightIntensity = LampIntensity::LOW;
+	this->ECurrentActiveCamera = ActiveCamera::FIRSTPERSON;
+
+	/* Starting Values For Point Light */
+	LightData startLightData;
+	startLightData.light_position = glm::vec3(0.0f, 0.0f, 0.0f);
+	startLightData.light_color = glm::vec3(1.0f, 1.0f, 1.0f);
+	startLightData.ambient_color = glm::vec3(1.0f, 1.0f, 1.0f);
+	startLightData.ambient_str = 0.2f;
+	startLightData.spec_str = 0.5f;
+	startLightData.spec_phong = 16.0f;
+	startLightData.intensity = LOW_INTENSITY;
 
 	this->pTank = new Tank();
 
@@ -21,18 +35,31 @@ Player::Player()
 	this->pTankLight->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 10.0f));
 	this->pTankLight->SetLightData(startLightData);
 
-	this->pTankCamera = new PerspectiveCamera();
-	this->pTankCamera->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, -10.0f));
-	this->pTankCamera->SetFOV(90.0f);
+	CreateThirdPersonCam();
+	CreateFirstPersonCam();
 }
 
-void entity::Player::CreateLight()
+
+
+const glm::highp_vec3& entity::Player::PointForward()
 {
-	
+	return this->pTank->GetTransform()->GetPosition() + this->pTank->GetTransform()->GetForwardVector();
+}
 
-	
+void entity::Player::CreateFirstPersonCam()
+{
+	this->pFirstPersonCam = new PerspectiveCamera();
+	this->pFirstPersonCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, 15.0f));
+	this->pFirstPersonCam->SetCenter(PointForward());
+	this->pFirstPersonCam->SetFOV(60.0f);
+}
 
-	
+void entity::Player::CreateThirdPersonCam()
+{
+	this->pThirdPersonCam = new PerspectiveCamera();
+	this->pThirdPersonCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, -10.0f));
+	this->pThirdPersonCam->SetCenter(this->pTank->GetTransform()->GetPosition());
+	this->pThirdPersonCam->SetFOV(60.0f);
 }
 
 void Player::ProcessInput(GLFWwindow* window)
@@ -48,12 +75,14 @@ void Player::ProcessInput(GLFWwindow* window)
 
 void Player::Update(float tDeltaTime)
 {
-	/* Same Transforms, Different Local Transfroms : 0 = Mesh, 1 = Camera, 2 = Light */
+	/* Same Transforms, Different Local Transfroms : 0 = Mesh, 1 = FPCamera, 2 = TPCamera, 3 = Light */
 	std::vector<Transform*> playerTransforms;
 
 	playerTransforms.push_back(this->pTank->GetTransform());
-	playerTransforms.push_back(this->pTankCamera->GetTransform());
+	playerTransforms.push_back(this->pFirstPersonCam->GetTransform());
+	playerTransforms.push_back(this->pThirdPersonCam->GetTransform());
 	playerTransforms.push_back(this->pTankLight->GetTransform());
+	
 
 	if (this->bKey_W)
 	{
@@ -64,8 +93,8 @@ void Player::Update(float tDeltaTime)
 			object->Move(movement);
 		}
 
-		pTankCamera->MoveCenter(movement);
-
+		pFirstPersonCam->SetCenter(PointForward());
+		pThirdPersonCam->MoveCenter(movement);
 	}
 
 	if (this->bKey_S)
@@ -77,23 +106,45 @@ void Player::Update(float tDeltaTime)
 			object->Move(movement);
 		}
 
-		pTankCamera->MoveCenter(movement);
+		pFirstPersonCam->SetCenter(PointForward());
+		pThirdPersonCam->MoveCenter(movement);
 	}
 
 	if (this->bKey_A)
 	{
-		for (Transform* object : playerTransforms)
-		{
-			object->Rotate(RotationAxis::YAW, -fRotationSpeed * tDeltaTime);
-		}
+		/* Rotate Mesh Directly */
+		playerTransforms[0]->Rotate(RotationAxis::YAW, fRotationSpeed * tDeltaTime);
+
+		/*
+		 *	Calculate Camera And Light Position Using The Tank's Forward Vector *
+		 *	FORMULA:
+		 *		NEW_POS = (ForwardVector * Radius * Direction) + Offset
+		 *		Radius = Distance Away From Tank
+		 *		Direction = if Forward (1), if Backward(-1)
+		 *      Offset = Y Offset for TPCamera, because camera is above the object
+		 */
+
+		playerTransforms[1]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * 15.0f));
+		playerTransforms[2]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * -10.0f) + glm::vec3(0.0f, 5.0f, 0.0f));
+		playerTransforms[3]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * 10.0f));
+
+		/* Set Camera Centers: FPCam always point forward, TPCam always point at tank */
+		pFirstPersonCam->SetCenter(PointForward());
+		pThirdPersonCam->SetCenter(playerTransforms[0]->GetPosition());
 	}
 
 	if (this->bKey_D)
 	{
-		for (Transform* object : playerTransforms)
-		{
-			object->Rotate(RotationAxis::YAW, fRotationSpeed * tDeltaTime);
-		}
+		float rotationAmount = -fRotationSpeed * tDeltaTime;
+
+		playerTransforms[0]->Rotate(RotationAxis::YAW, rotationAmount);
+
+		playerTransforms[1]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * 15.0f));
+		playerTransforms[2]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * -10.0f) + glm::vec3(0.0f, 5.0f, 0.0f));
+		playerTransforms[3]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * 10.0f));
+
+		pFirstPersonCam->SetCenter(PointForward());
+		pThirdPersonCam->SetCenter(playerTransforms[0]->GetPosition());
 	}
 
 	if (this->bKey_F && !this->bLampToggle)
@@ -128,7 +179,7 @@ void Player::Update(float tDeltaTime)
 void Player::Draw()
 {
 	LightData pointLightData = this->pTankLight->GetLightData();
-	CameraData perspectiveCameraData = this->pTankCamera->GetCameraData();
+	CameraData perspectiveCameraData = this->pThirdPersonCam->GetCameraData();
 
 	LightData directionalLightData;
 
@@ -145,7 +196,7 @@ void Player::Draw()
 
 CameraData Player::GetCameraData()
 {
-	return this->pTankCamera->GetCameraData();
+	return this->pThirdPersonCam->GetCameraData();
 }
 
 LightData Player::GetPointLightData()

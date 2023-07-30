@@ -23,6 +23,9 @@ namespace camera
 			void SetPositionAndCenter(glm::vec3 pos, glm::vec3 center);
 			void MovePositionAndCenter(glm::vec3 pos, glm::vec3 center);
 
+			void SetNearPlane(float near);
+			void SetFarPlane(float far);
+
 			glm::mat4 GetViewMatrix();
 			Transform* GetTransform();
 
