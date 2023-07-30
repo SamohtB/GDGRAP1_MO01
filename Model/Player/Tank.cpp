@@ -10,9 +10,6 @@ Tank::Tank()
 	this->texture = new Texture(strTex);
 	this->normals = new Normals(strNorm);
 	this->transform = new Transform();
-
-	this->transform->SetPosition(glm::vec3(0.0f, 0.0f, 10.0f));
-	this->transform->SetScale(1.0f);
 }
 
 void Tank::VertexInit()

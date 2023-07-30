@@ -173,6 +173,7 @@
     <ClInclude Include="Model\BaseClass\Transform\Transform.hpp" />
     <ClInclude Include="Controller\Game.hpp" />
     <ClInclude Include="Model\Light\PointLight.hpp" />
+    <ClInclude Include="Model\Player\EnumLightIntensity.hpp" />
     <ClInclude Include="Model\Player\Player.hpp" />
     <ClInclude Include="Model\Player\Tank.hpp" />
     <ClInclude Include="stb_image.h" />

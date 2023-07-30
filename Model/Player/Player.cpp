@@ -12,9 +12,14 @@ Player::Player()
 	bKey_Q = false;
 	bKey_E = false;
 	bKey_F = false;
+	bLampToggle = false;
+	this->ECurrentLightIntensity = LampIntensity::LOW;
 
 	this->pTank = new Tank();
-	CreateLight();
+
+	this->pTankLight = new PointLight();
+	this->pTankLight->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 10.0f));
+	this->pTankLight->SetLightData(startLightData);
 
 	this->pTankCamera = new PerspectiveCamera();
 	this->pTankCamera->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, -10.0f));
@@ -23,19 +28,11 @@ Player::Player()
 
 void entity::Player::CreateLight()
 {
-	this->pTankLight = new PointLight();
-	this->pTankLight->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 15.0f));
+	
 
-	LightData startLightData;
-	startLightData.light_position = glm::vec3(0.0f, 0.0f, 0.0f);
-	startLightData.light_color = glm::vec3(1.0f, 1.0f, 1.0f);
-	startLightData.ambient_color = glm::vec3(1.0f, 1.0f, 1.0f);
-	startLightData.ambient_str = 0.2f;
-	startLightData.spec_str = 0.5f;
-	startLightData.spec_phong = 16.0f;
-	startLightData.intensity = 100.0f;
+	
 
-	this->pTankLight->SetLightData(startLightData);
+	
 }
 
 void Player::ProcessInput(GLFWwindow* window)
@@ -97,6 +94,34 @@ void Player::Update(float tDeltaTime)
 		{
 			object->Rotate(RotationAxis::YAW, fRotationSpeed * tDeltaTime);
 		}
+	}
+
+	if (this->bKey_F && !this->bLampToggle)
+	{
+		this->bLampToggle = true;
+		switch (ECurrentLightIntensity)
+		{
+			case LampIntensity::LOW:
+				this->ECurrentLightIntensity = LampIntensity::MID;
+				this->pTankLight->SetIntensity(MID_INTENSITY);
+				break;
+
+			case LampIntensity::MID:
+				this->ECurrentLightIntensity = LampIntensity::HIGH;
+				this->pTankLight->SetIntensity(HIGH_INTENSITY);
+				break;
+
+			case LampIntensity::HIGH:
+				this->ECurrentLightIntensity = LampIntensity::LOW;
+				this->pTankLight->SetIntensity(LOW_INTENSITY);
+				break;
+			default:
+				break;
+		}
+	}
+	else if (!this->bKey_F)
+	{
+		this->bLampToggle = false;
 	}
 }
 
