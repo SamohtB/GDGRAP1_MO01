@@ -26,10 +26,20 @@ namespace entity
 			CameraData GetCameraData();
 			LightData GetPointLightData();
 
+			void AssignDirectionalLightData(LightData data);
+
 		private:
+			void ThirdPersonMovement(float tDeltaTime);
+			void ResetBinoculars();
+			void FirstPersonMovement(float tDeltaTime);
+			void PerspectiveCameraToggle();
+			void LampToggle();
+
+		private:
+			void CreateTankLight();
 			void CreateFirstPersonCam();
 			void CreateThirdPersonCam();
-			const glm::highp_vec3& PointForward();
+			const glm::vec3 PointForward();
 
 		private:
 			Tank* pTank;
@@ -39,6 +49,9 @@ namespace entity
 
 			LampIntensity ECurrentLightIntensity;
 			ActiveCamera ECurrentActiveCamera;
+			ActiveCamera EPreviousActiveCamera;
+
+			LightData pDirectionaLightData;
 
 		private:
 			bool bKey_W;
@@ -48,11 +61,15 @@ namespace entity
 			bool bKey_Q;
 			bool bKey_E;
 			bool bKey_F;
+			bool bKey_1;
+			bool bKey_2;
 
 			bool bLampToggle;
 			bool bCameraToggle;
+			bool bTopToggle;
 
 		private:
+			const float fZoomSpeed = 50.0f;
 			const float fMoveSpeed = 100.0f;
 			const float fRotationSpeed = 100.0f;
 			const float LOW_INTENSITY = 50.0f;

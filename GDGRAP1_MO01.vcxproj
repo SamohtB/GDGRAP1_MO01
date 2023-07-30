@@ -160,6 +160,7 @@
     <ClInclude Include="Model\Camera\OrthographicCamera.hpp" />
     <ClInclude Include="Model\Camera\PerspectiveCamera.hpp" />
     <ClInclude Include="Model\Clutter\Clutter.hpp" />
+    <ClInclude Include="Model\Environment.hpp" />
     <ClInclude Include="Model\Light\DirectionalLight.hpp" />
     <ClInclude Include="Model\Light\Light.hpp" />
     <ClInclude Include="Model\Light\LightData.hpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Model\BaseClass\Transform\Transform.hpp" />
     <ClInclude Include="Controller\Game.hpp" />
     <ClInclude Include="Model\Light\PointLight.hpp" />
+    <ClInclude Include="Model\Player\EnumActiveCamera.hpp" />
     <ClInclude Include="Model\Player\EnumLightIntensity.hpp" />
     <ClInclude Include="Model\Player\Player.hpp" />
     <ClInclude Include="Model\Player\Tank.hpp" />
@@ -181,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model\Environment.cpp" />
     <ClCompile Include="Model\BaseClass\Model.cpp" />
     <ClCompile Include="Model\BaseClass\Texture\Normals.cpp" />
     <ClCompile Include="Model\BaseClass\Shader.cpp" />
@@ -226,6 +229,32 @@
   <ItemGroup>
     <None Include="Shaders\clutter.frag" />
     <None Include="Shaders\clutter.vert" />
+    <CopyFileToFolders Include="Shaders\skybox.frag">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)Shaders</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)Shaders</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)Shaders</DestinationFolders>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\skybox.vert">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)Shaders</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)Shaders</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)Shaders</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)Shaders</DestinationFolders>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

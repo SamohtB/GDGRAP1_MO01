@@ -84,6 +84,12 @@
     <ClInclude Include="Model\Player\EnumLightIntensity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Player\EnumActiveCamera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Environment.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Controller\Game.cpp">
@@ -140,10 +146,15 @@
     <ClCompile Include="Model\Clutter\Clutter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Environment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Shaders\tank.vert" />
     <CopyFileToFolders Include="Shaders\tank.frag" />
+    <CopyFileToFolders Include="Shaders\skybox.frag" />
+    <CopyFileToFolders Include="Shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\clutter.vert" />

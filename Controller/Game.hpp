@@ -14,6 +14,8 @@
 
 #include "../Model/Player/Player.hpp"
 #include "../Model/Clutter/Clutter.hpp"
+#include "../Model/Environment.hpp"
+#include "../Model/Light/DirectionalLight.hpp"
 
 namespace Controller
 {
@@ -23,11 +25,14 @@ namespace Controller
 	{
 		public:
 			Game();
+			void CreateClutter();
 			void Run();
 
 		private:
 			/* GameObjects */
 			Player* player;
+			Environment* env;
+			DirectionalLight* moon;
 			std::vector<Clutter*> clutterList;
 
 		private:

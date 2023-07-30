@@ -19,6 +19,7 @@ namespace base_class
 
 			/* Getters */
 			glm::vec3 GetPosition();
+			glm::vec3 GetRotation();
 			glm::vec3 GetForwardVector();
 			glm::mat4 GetModelMatrix();
 			

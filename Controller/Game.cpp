@@ -7,14 +7,31 @@ Game::Game()
     Initialize();
 
     this->player = new Player();
+    this->env = new Environment();
+    this->moon = new DirectionalLight();
+    LightData data;
+    data.light_direction = glm::normalize(glm::vec3(140.0f, 90.0f, 0.0f));
+    data.light_color = glm::vec3(1.0f, 1.0f, 1.0f);
+    data.ambient_color = glm::vec3(1.0f, 1.0f, 1.0f);
+    data.ambient_str = 0.5f;
+    data.spec_str = 0.2f;
+    data.spec_phong = 16.0f;
+    data.intensity = 0.5f;
 
+    this->moon->SetLightData(data);
+
+    CreateClutter();
+}
+
+void Controller::Game::CreateClutter()
+{
     Clutter* clutter;
 
     clutter = new Clutter();
     clutter->Initialize("3D/Clutter/treasure_chest.obj", "3D/Clutter/Treasurechest_DIFF.png",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
 
-    clutter->GetTransform()->SetPosition(10.0f, 0.0f, 10.0f);   
+    clutter->GetTransform()->SetPosition(10.0f, 0.0f, 10.0f);
     clutter->GetTransform()->SetScale(0.1f);
     clutterList.push_back(clutter);
 
@@ -96,32 +113,25 @@ void Game::Update(float tDeltaTime)
 
 void Game::Render()
 {
+    CameraData cameraData = this->player->GetCameraData();
+    LightData pointLightData = this->player->GetPointLightData();
+    LightData dirLightData = this->moon->GetLightData();
+
     glDepthMask(GL_FALSE);
     glDepthFunc(GL_LEQUAL);
 
-    //Skybox draw
+    this->env->Draw(cameraData);
 
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LESS);
 
-    CameraData cameraData = this->player->GetCameraData();
-    LightData pointLightData = this->player->GetPointLightData();
-    LightData directionalLightData;
-
-    directionalLightData.light_direction = glm::vec3(0.0f, 3.0f, -10.0f);
-    directionalLightData.light_color = glm::vec3(1.0f, 1.0f, 1.0f);
-    directionalLightData.ambient_color = glm::vec3(1.0f, 1.0f, 1.0f);
-    directionalLightData.ambient_str = 0.2f;
-    directionalLightData.spec_str = 0.5f;
-    directionalLightData.spec_phong = 16.0f;
-    directionalLightData.intensity = 10.0f;
-
+    this->player->AssignDirectionalLightData(dirLightData);
     /* Game Object Draw */
     this->player->Draw();
 
     for (Clutter* clutter : clutterList)
     {
-        clutter->Draw(cameraData, pointLightData, directionalLightData);
+        clutter->Draw(cameraData, pointLightData, dirLightData);
     }
 
 }

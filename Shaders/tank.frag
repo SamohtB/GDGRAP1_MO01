@@ -92,7 +92,7 @@ void main()
 	vec3 pointLight = CalculatePointLight();
 	vec3 directionalLight = CalculateDirectionalLight();
 
-	vec3 finalColor = pointLight;
+	vec3 finalColor = pointLight + directionalLight;
 
 	FragColor = vec4(finalColor, 1.0) * pixelColor;
 }
