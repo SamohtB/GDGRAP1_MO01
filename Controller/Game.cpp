@@ -27,21 +27,43 @@ void Controller::Game::CreateClutter()
 {
     Clutter* clutter;
 
+    /* Chest */
     clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/treasure_chest.obj", "3D/Clutter/Treasurechest_DIFF.png",
+    clutter->Initialize("3D/Clutter/chest.obj", "3D/Clutter/chest_diff.png",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
 
     clutter->GetTransform()->SetPosition(10.0f, 0.0f, 10.0f);
-    clutter->GetTransform()->SetScale(0.1f);
+    clutter->GetTransform()->SetScale(0.05f);
+
     clutterList.push_back(clutter);
 
+    /* Table */
     clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/Table.obj", "3D/Clutter/Table Texture.png",
+    clutter->Initialize("3D/Clutter/table.obj", "3D/Clutter/table_diff.png",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
-
-    clutter->GetTransform()->SetLocalPosition(-10.0f, 0.0f, 10.0f);
+    clutter->GetTransform()->SetPosition(-10.0f, 0.0f, 10.0f);
+    clutter->GetTransform()->SetScale(2.0f);
 
     clutterList.push_back(clutter);
+
+    /* Robot */
+    clutter = new Clutter();
+    clutter->Initialize("3D/Clutter/robot.obj", "3D/Clutter/robot_diff.png",
+        "Shaders/clutter.vert", "Shaders/clutter.frag");
+    clutter->GetTransform()->SetPosition(20.0f, 0.0f, 15.0f);
+    clutter->GetTransform()->SetScale(3.0f);
+
+    clutterList.push_back(clutter);
+    
+    /* Recon */
+    clutter = new Clutter();
+    clutter->Initialize("3D/Clutter/recon.obj", "3D/Clutter/recon_diff.jpg",
+        "Shaders/clutter.vert", "Shaders/clutter.frag");
+    clutter->GetTransform()->SetPosition(-20.0f, 0.0f, 15.0f);
+    clutter->GetTransform()->SetScale(1.0f);
+
+    clutterList.push_back(clutter);
+
 }
 
 void Game::Initialize()
