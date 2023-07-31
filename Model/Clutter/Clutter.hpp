@@ -19,7 +19,7 @@ namespace entity
 	public:
 		Clutter();
 
-		void Initialize(std::string strMesh, std::string strTex, std::string strVert, std::string strFrag);
+		virtual void Initialize(std::string strMesh, std::string strTex, std::string strVert, std::string strFrag);
 		void Draw(CameraData cameraData, LightData pointLight, LightData directionalLight);
 		Transform* GetTransform();
 

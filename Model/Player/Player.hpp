@@ -26,6 +26,7 @@ namespace entity
 			void Update(float tDeltaTime);
 			void BirdEyeMovement(float tDeltaTime);
 			void BirdEyeToggle();
+			void ResetBirdView();
 			void Draw();
 
 			CameraData GetCameraData();

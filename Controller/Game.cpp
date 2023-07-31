@@ -26,44 +26,65 @@ Game::Game()
 void Controller::Game::CreateClutter()
 {
     Clutter* clutter;
-
+    
     /* Chest */
-    clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/chest.obj", "3D/Clutter/chest_diff.png",
-        "Shaders/clutter.vert", "Shaders/clutter.frag");
+    for (int i = 0; i < 3; i++)
+    {
+        clutter = new Clutter();
+        clutter->Initialize("3D/Clutter/chest.obj", "3D/Clutter/chest_diff.png",
+            "Shaders/clutter.vert", "Shaders/clutter.frag");
 
-    clutter->GetTransform()->SetPosition(10.0f, 0.0f, 10.0f);
-    clutter->GetTransform()->SetScale(0.05f);
+        clutter->GetTransform()->SetPosition(-10.0f + (i * 10.0f), 0.0f, -40.0f);
+        clutter->GetTransform()->SetScale(0.03f);
 
-    clutterList.push_back(clutter);
+        clutterList.push_back(clutter);
+    }
 
     /* Table */
     clutter = new Clutter();
     clutter->Initialize("3D/Clutter/table.obj", "3D/Clutter/table_diff.png",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
-    clutter->GetTransform()->SetPosition(-10.0f, 0.0f, 10.0f);
+    clutter->GetTransform()->SetPosition(35.0f, -1.0f, 20.0f);
+    clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
     clutter->GetTransform()->SetScale(2.0f);
 
     clutterList.push_back(clutter);
 
     /* Robot */
-    clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/robot.obj", "3D/Clutter/robot_diff.png",
-        "Shaders/clutter.vert", "Shaders/clutter.frag");
-    clutter->GetTransform()->SetPosition(20.0f, 0.0f, 15.0f);
-    clutter->GetTransform()->SetScale(3.0f);
+    for (int i = 0; i < 2; i++)
+    {
+        clutter = new Clutter();
+        clutter->Initialize("3D/Clutter/robot.obj", "3D/Clutter/robot_diff" + std::to_string(i + 1) + ".png",
+           "Shaders/clutter.vert", "Shaders/clutter.frag");
+        clutter->GetTransform()->SetPosition(35.0f, 4.0f, 10.0f + (i * 20.0f));
+        clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
+        clutter->GetTransform()->SetScale(2.0f);
 
-    clutterList.push_back(clutter);
+        clutterList.push_back(clutter);
+    }
     
     /* Recon */
+    for (int i = 0; i < 3; i++)
+    {
+        clutter = new Clutter();
+        clutter->Initialize("3D/Clutter/recon.obj", "3D/Clutter/recon_diff.jpg",
+            "Shaders/clutter.vert", "Shaders/clutter.frag");
+        clutter->GetTransform()->SetPosition(-35.0f, -1.0f, 10.0f + (i * 10.0f));
+        clutter->GetTransform()->SetRotation(RotationAxis::YAW, 90.0f);
+        clutter->GetTransform()->SetScale(1.0f);
+
+        clutterList.push_back(clutter);
+    }
+
+    /* Floor */
     clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/recon.obj", "3D/Clutter/recon_diff.jpg",
+    clutter->Initialize("3D/plane.obj", "3D/bricks2.jpg",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
-    clutter->GetTransform()->SetPosition(-20.0f, 0.0f, 15.0f);
-    clutter->GetTransform()->SetScale(1.0f);
-
+    clutter->GetTransform()->SetPosition(0.0f, -1.5f, 0.0f);
+    clutter->GetTransform()->SetRotation(RotationAxis::PITCH, 90.0f);
+    clutter->GetTransform()->SetScale(50.0f);
+    
     clutterList.push_back(clutter);
-
 }
 
 void Game::Initialize()

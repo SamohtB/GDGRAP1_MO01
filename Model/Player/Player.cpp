@@ -30,6 +30,47 @@ Player::Player()
 	CreateBirdEyeCam();
 
 }
+void entity::Player::CreateTankLight()
+{
+	/* Starting Values For Point Light */
+	LightData startLightData;
+	startLightData.light_position = glm::vec3(0.0f, 0.0f, 0.0f);
+	startLightData.light_color = glm::vec3(1.0f, 1.0f, 1.0f);
+	startLightData.ambient_color = glm::vec3(1.0f, 1.0f, 1.0f);
+	startLightData.ambient_str = 0.2f;
+	startLightData.spec_str = 0.5f;
+	startLightData.spec_phong = 16.0f;
+	startLightData.intensity = LOW_INTENSITY;
+
+	this->pTankLight = new PointLight();
+	this->pTankLight->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 10.0f));
+	this->pTankLight->SetLightData(startLightData);
+}
+
+void entity::Player::CreateFirstPersonCam()
+{
+	this->pFirstPersonCam = new PerspectiveCamera();
+	this->pFirstPersonCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+	this->pFirstPersonCam->SetCenter(PointForward());
+	this->pFirstPersonCam->SetFOV(30.0f);
+}
+
+void entity::Player::CreateThirdPersonCam()
+{
+	this->pThirdPersonCam = new PerspectiveCamera();
+	this->pThirdPersonCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, -10.0f));
+	this->pThirdPersonCam->SetCenter(this->pTank->GetTransform()->GetPosition());
+	this->pThirdPersonCam->SetFOV(60.0f);
+}
+
+void entity::Player::CreateBirdEyeCam()
+{
+	this->pBirdEyeCam = new OrthographicCamera();
+	this->pBirdEyeCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 10.0f, -5.0f));
+	this->pBirdEyeCam->SetCenter(this->pTank->GetTransform()->GetPosition());
+	this->pBirdEyeCam->SetSize(15.0f);
+	this->pBirdEyeCam->SetFarPlane(1000.0f);
+}
 
 void Player::ProcessInput(GLFWwindow* window)
 {
@@ -87,19 +128,9 @@ void entity::Player::BirdEyeMovement(float tDeltaTime)
 		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(-movement, 0.0f, 0.0f), glm::vec3(-movement, 0.0f, 0.0f));
 	}
 
-	if (this->bKey_A)
+	if (this->bKey_D)
 	{
 		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(movement, 0.0f, 0.0f), glm::vec3(movement, 0.0f, 0.0f));
-	}
-
-	if (this->bKey_Q)
-	{
-		this->pBirdEyeCam->IncSize(fZoomSpeed * tDeltaTime);
-	}
-
-	if (this->bKey_E)
-	{
-		this->pBirdEyeCam->IncSize(-fZoomSpeed * tDeltaTime);
 	}
 }
 
@@ -111,11 +142,11 @@ void entity::Player::BirdEyeToggle()
 		switch (ECurrentActiveCamera)
 		{
 		case ActiveCamera::BIRDSEYE:
-			/* Add Reset Position Script On Enter */
 			this->ECurrentActiveCamera = this->EPreviousActiveCamera;
 			break;
 
 		default:
+			ResetBirdView();
 			this->ECurrentActiveCamera = ActiveCamera::BIRDSEYE;
 			break;
 		}
@@ -124,6 +155,12 @@ void entity::Player::BirdEyeToggle()
 	{
 		this->bTopToggle = false;
 	}
+}
+
+void entity::Player::ResetBirdView()
+{
+	Transform* transform = this->pTank->GetTransform();
+	this->pBirdEyeCam->SetPositionAndCenter(transform->GetPosition(), transform->GetPosition());
 }
 
 void entity::Player::FirstPersonMovement(float tDeltaTime)
@@ -228,7 +265,6 @@ void entity::Player::ThirdPersonMovement(float tDeltaTime)
 	/* Same Transforms, Different Local Transfroms : 0 = Mesh, 1 = FPCamera, 2 = TPCamera, 3 = Light */
 	std::vector<Transform*> playerTransforms;
 
-
 	playerTransforms.push_back(this->pTank->GetTransform());
 	playerTransforms.push_back(this->pFirstPersonCam->GetTransform());
 	playerTransforms.push_back(this->pThirdPersonCam->GetTransform());
@@ -327,48 +363,6 @@ const glm::vec3 entity::Player::PointForward()
 	glm::vec3 Forward = this->pFirstPersonCam->GetTransform()->GetForwardVector() * 1000.0f;
 	Forward += this->pFirstPersonCam->GetTransform()->GetPosition();
 	return Forward;
-}
-
-void entity::Player::CreateTankLight()
-{
-	/* Starting Values For Point Light */
-	LightData startLightData;
-	startLightData.light_position = glm::vec3(0.0f, 0.0f, 0.0f);
-	startLightData.light_color = glm::vec3(1.0f, 1.0f, 1.0f);
-	startLightData.ambient_color = glm::vec3(1.0f, 1.0f, 1.0f);
-	startLightData.ambient_str = 0.2f;
-	startLightData.spec_str = 0.5f;
-	startLightData.spec_phong = 16.0f;
-	startLightData.intensity = LOW_INTENSITY;
-
-	this->pTankLight = new PointLight();
-	this->pTankLight->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 10.0f));
-	this->pTankLight->SetLightData(startLightData);
-}
-
-void entity::Player::CreateFirstPersonCam()
-{
-	this->pFirstPersonCam = new PerspectiveCamera();
-	this->pFirstPersonCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, 0.0f));
-	this->pFirstPersonCam->SetCenter(PointForward());
-	this->pFirstPersonCam->SetFOV(90.0f);
-}
-
-void entity::Player::CreateThirdPersonCam()
-{
-	this->pThirdPersonCam = new PerspectiveCamera();
-	this->pThirdPersonCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, -10.0f));
-	this->pThirdPersonCam->SetCenter(this->pTank->GetTransform()->GetPosition());
-	this->pThirdPersonCam->SetFOV(60.0f);
-}
-
-void entity::Player::CreateBirdEyeCam()
-{
-	this->pBirdEyeCam = new OrthographicCamera();
-	this->pBirdEyeCam->GetTransform()->SetPosition(glm::vec3(0.0f, 20.0f, 0.0f));
-	this->pBirdEyeCam->SetCenter(glm::vec3(this->pTank->GetTransform()->GetPosition()));
-	this->pBirdEyeCam->SetSize(15.0f);
-	this->pBirdEyeCam->SetFarPlane(1000.0f);
 }
 
 CameraData Player::GetCameraData()
