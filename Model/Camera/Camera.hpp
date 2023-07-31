@@ -36,10 +36,7 @@ namespace camera
 			const glm::vec3 WORLD_UP = glm::normalize(glm::vec3(0.f, 1.f, 0.f));
 
 			Transform* transform;
-
 			glm::vec3 cameraCenter;
-			glm::mat4 view_matrix;
-			glm::mat4 projection_matrix;
 
 			float nearPlane;
 			float farPlane;

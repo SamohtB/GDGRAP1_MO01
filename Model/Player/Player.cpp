@@ -27,6 +27,8 @@ Player::Player()
 	CreateTankLight();
 	CreateThirdPersonCam();
 	CreateFirstPersonCam();
+	CreateBirdEyeCam();
+
 }
 
 void Player::ProcessInput(GLFWwindow* window)
@@ -46,8 +48,8 @@ void Player::ProcessInput(GLFWwindow* window)
 void Player::Update(float tDeltaTime)
 {
 	LampToggle();
-
-
+	BirdEyeToggle();
+		
 	switch (ECurrentActiveCamera)
 	{
 		case ActiveCamera::THIRDPERSON:
@@ -59,6 +61,68 @@ void Player::Update(float tDeltaTime)
 			FirstPersonMovement(tDeltaTime);
 			PerspectiveCameraToggle();
 			break;
+
+		case ActiveCamera::BIRDSEYE:
+			BirdEyeMovement(tDeltaTime);
+			break;
+	}
+}
+
+void entity::Player::BirdEyeMovement(float tDeltaTime)
+{
+	float movement = fMoveSpeed * tDeltaTime;
+
+	if (this->bKey_W)
+	{
+		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(0.0f, 0.0f, movement), glm::vec3(0.0f, 0.0f, movement));
+	}
+
+	if (this->bKey_S)
+	{
+		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(0.0f, 0.0f, -movement), glm::vec3(0.0f, 0.0f, -movement));
+	}
+
+	if (this->bKey_A)
+	{
+		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(-movement, 0.0f, 0.0f), glm::vec3(-movement, 0.0f, 0.0f));
+	}
+
+	if (this->bKey_A)
+	{
+		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(movement, 0.0f, 0.0f), glm::vec3(movement, 0.0f, 0.0f));
+	}
+
+	if (this->bKey_Q)
+	{
+		this->pBirdEyeCam->IncSize(fZoomSpeed * tDeltaTime);
+	}
+
+	if (this->bKey_E)
+	{
+		this->pBirdEyeCam->IncSize(-fZoomSpeed * tDeltaTime);
+	}
+}
+
+void entity::Player::BirdEyeToggle()
+{
+	if (this->bKey_2 && !this->bTopToggle)
+	{
+		this->bTopToggle = true;
+		switch (ECurrentActiveCamera)
+		{
+		case ActiveCamera::BIRDSEYE:
+			/* Add Reset Position Script On Enter */
+			this->ECurrentActiveCamera = this->EPreviousActiveCamera;
+			break;
+
+		default:
+			this->ECurrentActiveCamera = ActiveCamera::BIRDSEYE;
+			break;
+		}
+	}
+	else if (!this->bKey_2)
+	{
+		this->bTopToggle = false;
 	}
 }
 
@@ -108,18 +172,18 @@ void entity::Player::PerspectiveCameraToggle()
 		this->bCameraToggle = true;
 		switch (ECurrentActiveCamera)
 		{
-		case ActiveCamera::FIRSTPERSON:
-			this->ECurrentActiveCamera = ActiveCamera::THIRDPERSON;
-			this->EPreviousActiveCamera = ActiveCamera::THIRDPERSON;
-			break;
+			case ActiveCamera::FIRSTPERSON:
+				this->ECurrentActiveCamera = ActiveCamera::THIRDPERSON;
+				this->EPreviousActiveCamera = ActiveCamera::THIRDPERSON;
+				break;
 
-		case ActiveCamera::THIRDPERSON:
-			this->ECurrentActiveCamera = ActiveCamera::FIRSTPERSON;
-			this->EPreviousActiveCamera = ActiveCamera::FIRSTPERSON;
-			break;
+			case ActiveCamera::THIRDPERSON:
+				this->ECurrentActiveCamera = ActiveCamera::FIRSTPERSON;
+				this->EPreviousActiveCamera = ActiveCamera::FIRSTPERSON;
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 	}
 	else if (!this->bKey_1)
@@ -298,6 +362,15 @@ void entity::Player::CreateThirdPersonCam()
 	this->pThirdPersonCam->SetFOV(60.0f);
 }
 
+void entity::Player::CreateBirdEyeCam()
+{
+	this->pBirdEyeCam = new OrthographicCamera();
+	this->pBirdEyeCam->GetTransform()->SetPosition(glm::vec3(0.0f, 20.0f, 0.0f));
+	this->pBirdEyeCam->SetCenter(glm::vec3(this->pTank->GetTransform()->GetPosition()));
+	this->pBirdEyeCam->SetSize(15.0f);
+	this->pBirdEyeCam->SetFarPlane(1000.0f);
+}
+
 CameraData Player::GetCameraData()
 {
 	CameraData cameraData;
@@ -313,6 +386,7 @@ CameraData Player::GetCameraData()
 			break;
 
 		case ActiveCamera::BIRDSEYE:
+			cameraData = this->pBirdEyeCam->GetCameraData();
 			break;
 	}
 

@@ -4,6 +4,7 @@
 
 #include "Tank.hpp"
 #include "../Camera/PerspectiveCamera.hpp"
+#include "../Camera/OrthographicCamera.hpp"
 #include "../Light/PointLight.hpp"
 
 #include "EnumLightIntensity.hpp"
@@ -19,8 +20,12 @@ namespace entity
 		public:
 			Player();
 
+			void CreateBirdEyeCam();
+
 			void ProcessInput(GLFWwindow* window);
 			void Update(float tDeltaTime);
+			void BirdEyeMovement(float tDeltaTime);
+			void BirdEyeToggle();
 			void Draw();
 
 			CameraData GetCameraData();
@@ -46,6 +51,7 @@ namespace entity
 			PointLight* pTankLight;
 			PerspectiveCamera* pThirdPersonCam;
 			PerspectiveCamera* pFirstPersonCam;
+			OrthographicCamera* pBirdEyeCam;
 
 			LampIntensity ECurrentLightIntensity;
 			ActiveCamera ECurrentActiveCamera;
