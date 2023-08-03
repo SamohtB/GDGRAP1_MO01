@@ -31,22 +31,22 @@ void Controller::Game::CreateClutter()
     for (int i = 0; i < 3; i++)
     {
         clutter = new Clutter();
-        clutter->Initialize("3D/Clutter/chest.obj", "3D/Clutter/chest_diff.png",
+        clutter->Initialize("3D/Clutter/CardBoard_Box.obj", "3D/Clutter/CardBoard_Box.png",
             "Shaders/clutter.vert", "Shaders/clutter.frag");
 
-        clutter->GetTransform()->SetPosition(-10.0f + (i * 10.0f), 0.0f, -40.0f);
-        clutter->GetTransform()->SetScale(0.03f);
+        clutter->GetTransform()->SetPosition(-10.0f - (i * 5.0f), -1.0f, -5.0f);
+        clutter->GetTransform()->SetScale(0.005f);
 
         clutterList.push_back(clutter);
     }
 
-    /* Table */
+    /* Trash */
     clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/table.obj", "3D/Clutter/table_diff.png",
+    clutter->Initialize("3D/Clutter/Dumpster.obj", "3D/Clutter/dumptex.jpg",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
-    clutter->GetTransform()->SetPosition(35.0f, -1.0f, 20.0f);
+    clutter->GetTransform()->SetPosition(35.0f, -3.0f,150.0f);
     clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
-    clutter->GetTransform()->SetScale(2.0f);
+    clutter->GetTransform()->SetScale(0.1f);
 
     clutterList.push_back(clutter);
 
@@ -56,7 +56,7 @@ void Controller::Game::CreateClutter()
         clutter = new Clutter();
         clutter->Initialize("3D/Clutter/robot.obj", "3D/Clutter/robot_diff" + std::to_string(i + 1) + ".png",
            "Shaders/clutter.vert", "Shaders/clutter.frag");
-        clutter->GetTransform()->SetPosition(35.0f, 4.0f, 10.0f + (i * 20.0f));
+        clutter->GetTransform()->SetPosition(300.0f, 4.0f, 400.0f + (i * 20.0f));
         clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
         clutter->GetTransform()->SetScale(2.0f);
 
@@ -69,12 +69,31 @@ void Controller::Game::CreateClutter()
         clutter = new Clutter();
         clutter->Initialize("3D/Clutter/recon.obj", "3D/Clutter/recon_diff.jpg",
             "Shaders/clutter.vert", "Shaders/clutter.frag");
-        clutter->GetTransform()->SetPosition(-35.0f, -1.0f, 10.0f + (i * 10.0f));
+        clutter->GetTransform()->SetPosition(-150.0f, -1.0f, 150.0f + (i * 10.0f));
         clutter->GetTransform()->SetRotation(RotationAxis::YAW, 90.0f);
         clutter->GetTransform()->SetScale(1.0f);
 
         clutterList.push_back(clutter);
     }
+
+    clutter = new Clutter();
+    clutter->Initialize("3D/Clutter/Dumpster.obj", "3D/Clutter/dumptex.jpg",
+        "Shaders/clutter.vert", "Shaders/clutter.frag");
+    clutter->GetTransform()->SetPosition(-250.0f, -5.0f, 300.0f);
+    clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
+    clutter->GetTransform()->SetScale(0.1f);
+
+    clutterList.push_back(clutter);
+
+    clutter = new Clutter();
+    clutter->Initialize("3D/Clutter/Dumpster.obj", "3D/Clutter/dumptex.jpg",
+        "Shaders/clutter.vert", "Shaders/clutter.frag");
+    clutter->GetTransform()->SetPosition(-250.0f, -5.0f, 400.0f);
+    clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
+    clutter->GetTransform()->SetScale(0.1f);
+
+    clutterList.push_back(clutter);
+
 
     /* Floor */
     clutter = new Clutter();
@@ -82,9 +101,11 @@ void Controller::Game::CreateClutter()
         "Shaders/clutter.vert", "Shaders/clutter.frag");
     clutter->GetTransform()->SetPosition(0.0f, -1.5f, 0.0f);
     clutter->GetTransform()->SetRotation(RotationAxis::PITCH, 90.0f);
-    clutter->GetTransform()->SetScale(50.0f);
+    clutter->GetTransform()->SetScale(500.0f);
     
     clutterList.push_back(clutter);
+
+
 }
 
 void Game::Initialize()
@@ -154,11 +175,12 @@ void Game::Update(float tDeltaTime)
     this->player->Update(tDeltaTime);
 }
 
+
 void Game::Render()
 {
-    CameraData cameraData = this->player->GetCameraData();
     LightData pointLightData = this->player->GetPointLightData();
     LightData dirLightData = this->moon->GetLightData();
+    CameraData cameraData = this->player->GetCameraData();
 
     glDepthMask(GL_FALSE);
     glDepthFunc(GL_LEQUAL);
