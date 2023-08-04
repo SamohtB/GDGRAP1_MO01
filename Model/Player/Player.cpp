@@ -35,6 +35,7 @@ Player::Player()
 	CreateFirstPersonCam();
 	CreateBirdEyeCam();
 }
+
 void entity::Player::CreateTankLight()
 {
 	/* Starting Values For Point Light */
@@ -73,10 +74,10 @@ void entity::Player::CreateThirdPersonCam()
 void entity::Player::CreateBirdEyeCam()
 {
 	this->pBirdEyeCam = new OrthographicCamera();
-	this->pBirdEyeCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 10.0f, -5.0f));
+	this->pBirdEyeCam->SetPosition(glm::vec3(0.0f, 20.0f, -1.0f));
 	this->pBirdEyeCam->SetCenter(this->pTank->GetTransform()->GetPosition());
-	this->pBirdEyeCam->SetSize(30.0f);
-	this->pBirdEyeCam->SetFarPlane(1000.0f);
+	this->pBirdEyeCam->SetSize(45.0f);
+	this->pBirdEyeCam->SetFarPlane(100.0f);
 }
 
 void Player::ProcessInput(GLFWwindow* window)
@@ -127,22 +128,26 @@ void entity::Player::BirdEyeMovement(float tDeltaTime)
 
 	if (this->bKey_W)
 	{
-		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(0.0f, 0.0f, movement), glm::vec3(0.0f, 0.0f, movement));
+		this->pBirdEyeCam->SetPosition(glm::vec3(0.0f, 0.0f, movement) + this->pBirdEyeCam->GetPosition());
+		this->pBirdEyeCam->MoveCenter(glm::vec3(0.0f, 0.0f, movement));
 	}
 
 	if (this->bKey_S)
 	{
-		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(0.0f, 0.0f, -movement), glm::vec3(0.0f, 0.0f, -movement));
+		this->pBirdEyeCam->SetPosition(glm::vec3(0.0f, 0.0f, -movement) + this->pBirdEyeCam->GetPosition());
+		this->pBirdEyeCam->MoveCenter(glm::vec3(0.0f, 0.0f, -movement));
 	}
 
 	if (this->bKey_A)
 	{
-		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(movement, 0.0f, 0.0f), glm::vec3(movement, 0.0f, 0.0f));
+		this->pBirdEyeCam->SetPosition(glm::vec3(movement, 0.0f, 0.0f) + this->pBirdEyeCam->GetPosition());
+		this->pBirdEyeCam->MoveCenter(glm::vec3(movement, 0.0f, 0.0f));
 	}
 
 	if (this->bKey_D)
 	{
-		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(-movement, 0.0f, 0.0f), glm::vec3(-movement, 0.0f, 0.0f));
+		this->pBirdEyeCam->SetPosition(glm::vec3(-movement, 0.0f, 0.0f) + this->pBirdEyeCam->GetPosition());
+		this->pBirdEyeCam->MoveCenter(glm::vec3(-movement, 0.0f, 0.0f));
 	}
 }
 
@@ -174,8 +179,8 @@ void entity::Player::BirdEyeToggle()
 /* Resets the Ortho Cam to Start on the Player */
 void entity::Player::ResetBirdView()
 {
-	Transform* transform = this->pTank->GetTransform();
-	this->pBirdEyeCam->SetPositionAndCenter(transform->GetPosition(), transform->GetPosition());
+	this->pBirdEyeCam->SetPosition(this->pTank->GetTransform()->GetPosition() + glm::vec3(0.0, 20.0, -1.0f));
+	this->pBirdEyeCam->SetCenter(this->pTank->GetTransform()->GetPosition());
 }
 
 /* FPCam Movement - Rotates the camera's transform. */

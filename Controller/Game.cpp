@@ -181,17 +181,15 @@ void Game::Render()
     LightData pointLightData = this->player->GetPointLightData();
     LightData dirLightData = this->moon->GetLightData();
     CameraData cameraData = this->player->GetCameraData();
-
+    
     glDepthMask(GL_FALSE);
     glDepthFunc(GL_LEQUAL);
 
-    cameraData = this->player->GetCameraData();
     this->env->Draw(cameraData);
 
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LESS);
 
-    cameraData = this->player->GetCameraData();
     this->player->AssignDirectionalLightData(dirLightData);
     /* Game Object Draw */
     this->player->Draw();

@@ -156,6 +156,11 @@ glm::vec3 Transform::GetPosition()
 	return this->position + this->local_position;
 }
 
+glm::vec3 Transform::GetPos()
+{
+	return this->position;
+}
+
 glm::vec3 Transform::GetRotation()
 {
 	return glm::vec3(pitch, yaw, roll);

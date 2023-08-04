@@ -28,7 +28,7 @@ CameraData OrthographicCamera::GetCameraData()
 	CameraData data;
 
 	data.camera_pos = this->transform->GetPosition();
-	data.view_matrix = this->GetViewMatrix();
+	data.view_matrix = glm::lookAt(this->pos, this->cameraCenter, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f)));
 	data.projection_matrix = this->GetProjectionMatrix();
 
 	return data;

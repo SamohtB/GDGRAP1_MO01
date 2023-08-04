@@ -22,6 +22,7 @@ namespace base_class
 			glm::vec3 GetRotation();
 			glm::vec3 GetForwardVector();
 			glm::mat4 GetModelMatrix();
+			glm::vec3 GetPos();
 			
 			/* Translation Functions */
 			void Move(float x, float y, float z);
