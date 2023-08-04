@@ -104,8 +104,6 @@ void Controller::Game::CreateClutter()
     clutter->GetTransform()->SetScale(500.0f);
     
     clutterList.push_back(clutter);
-
-
 }
 
 void Game::Initialize()
@@ -115,7 +113,7 @@ void Game::Initialize()
         exit(-1);
     }
 
-    this->gameWindow = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Thomas Banatin", NULL, NULL);
+    this->gameWindow = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Lost In Tank by Banatin and Guzman", NULL, NULL);
 
     if (!gameWindow)
     {
@@ -140,6 +138,8 @@ void Game::Run()
     glfwSetTime(0.0f);
     double tLastUpdate = 0.0f;
     float tTimePerFrame = 1.f / FRAME_RATE_LIMIT;
+
+    glfwSetCursorPos(this->gameWindow, SCREEN_WIDTH/ 2, SCREEN_HEIGHT / 2);
 
     while (!glfwWindowShouldClose(gameWindow))
     {
@@ -185,11 +185,13 @@ void Game::Render()
     glDepthMask(GL_FALSE);
     glDepthFunc(GL_LEQUAL);
 
+    cameraData = this->player->GetCameraData();
     this->env->Draw(cameraData);
 
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LESS);
 
+    cameraData = this->player->GetCameraData();
     this->player->AssignDirectionalLightData(dirLightData);
     /* Game Object Draw */
     this->player->Draw();

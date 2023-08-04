@@ -15,6 +15,12 @@ Player::Player()
 	bKey_1 = false;
 	bKey_2 = false;
 
+	dCurrentMouseX = 0.0f;
+	dCurrentMouseY = 0.0f;
+
+	dPreviousMouseX = 0.0f;
+	dPreviousMouseY = 0.0f;
+
 	bLampToggle = false;
 	bCameraToggle = false;
 	bTopToggle = false;
@@ -28,7 +34,6 @@ Player::Player()
 	CreateThirdPersonCam();
 	CreateFirstPersonCam();
 	CreateBirdEyeCam();
-
 }
 void entity::Player::CreateTankLight()
 {
@@ -53,6 +58,7 @@ void entity::Player::CreateFirstPersonCam()
 	this->pFirstPersonCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 	this->pFirstPersonCam->SetCenter(PointForward());
 	this->pFirstPersonCam->SetFOV(30.0f);
+	this->pFirstPersonCam->SetFarPlane(225.0f);
 }
 
 void entity::Player::CreateThirdPersonCam()
@@ -61,6 +67,7 @@ void entity::Player::CreateThirdPersonCam()
 	this->pThirdPersonCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, -10.0f));
 	this->pThirdPersonCam->SetCenter(this->pTank->GetTransform()->GetPosition());
 	this->pThirdPersonCam->SetFOV(60.0f);
+	this->pThirdPersonCam->SetFarPlane(150.0f);
 }
 
 void entity::Player::CreateBirdEyeCam()
@@ -68,7 +75,7 @@ void entity::Player::CreateBirdEyeCam()
 	this->pBirdEyeCam = new OrthographicCamera();
 	this->pBirdEyeCam->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 10.0f, -5.0f));
 	this->pBirdEyeCam->SetCenter(this->pTank->GetTransform()->GetPosition());
-	this->pBirdEyeCam->SetSize(15.0f);
+	this->pBirdEyeCam->SetSize(30.0f);
 	this->pBirdEyeCam->SetFarPlane(1000.0f);
 }
 
@@ -84,15 +91,19 @@ void Player::ProcessInput(GLFWwindow* window)
 
 	this->bKey_1 = glfwGetKey(window, GLFW_KEY_1);
 	this->bKey_2 = glfwGetKey(window, GLFW_KEY_2);
+
+	glfwGetCursorPos(window, &this->dCurrentMouseX, &this->dCurrentMouseY);
 }
 
 void Player::Update(float tDeltaTime)
 {
+	/* Lamp Toggle and Bird's Eye Toggle Always Active*/
 	LampToggle();
 	BirdEyeToggle();
 		
 	switch (ECurrentActiveCamera)
 	{
+		/* Only Toggle FPCam and TPCam when using a perspective camera */
 		case ActiveCamera::THIRDPERSON:
 			ThirdPersonMovement(tDeltaTime);
 			PerspectiveCameraToggle();
@@ -109,6 +120,7 @@ void Player::Update(float tDeltaTime)
 	}
 }
 
+/* Ortho Camera Movement - Moves the camera and the center */
 void entity::Player::BirdEyeMovement(float tDeltaTime)
 {
 	float movement = fMoveSpeed * tDeltaTime;
@@ -125,19 +137,21 @@ void entity::Player::BirdEyeMovement(float tDeltaTime)
 
 	if (this->bKey_A)
 	{
-		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(-movement, 0.0f, 0.0f), glm::vec3(-movement, 0.0f, 0.0f));
+		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(movement, 0.0f, 0.0f), glm::vec3(movement, 0.0f, 0.0f));
 	}
 
 	if (this->bKey_D)
 	{
-		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(movement, 0.0f, 0.0f), glm::vec3(movement, 0.0f, 0.0f));
+		this->pBirdEyeCam->MovePositionAndCenter(glm::vec3(-movement, 0.0f, 0.0f), glm::vec3(-movement, 0.0f, 0.0f));
 	}
 }
 
+/* Swtiches Between Bird Eye Cam and Previous Camera State */
 void entity::Player::BirdEyeToggle()
 {
 	if (this->bKey_2 && !this->bTopToggle)
 	{
+		/* Only Read Once Per Press */
 		this->bTopToggle = true;
 		switch (ECurrentActiveCamera)
 		{
@@ -157,12 +171,15 @@ void entity::Player::BirdEyeToggle()
 	}
 }
 
+/* Resets the Ortho Cam to Start on the Player */
 void entity::Player::ResetBirdView()
 {
 	Transform* transform = this->pTank->GetTransform();
 	this->pBirdEyeCam->SetPositionAndCenter(transform->GetPosition(), transform->GetPosition());
 }
 
+/* FPCam Movement - Rotates the camera's transform. */
+/*Calculates forward vector given the euler rotations to make the camera face forward */
 void entity::Player::FirstPersonMovement(float tDeltaTime)
 {
 	Transform* cameraTransform = this->pFirstPersonCam->GetTransform();
@@ -202,10 +219,12 @@ void entity::Player::FirstPersonMovement(float tDeltaTime)
 	}
 }
 
+/* Swtiches Between First Person and Third Person Camera */
 void entity::Player::PerspectiveCameraToggle()
 {
 	if (this->bKey_1 && !this->bCameraToggle)
 	{
+		/* Only Read Once Per Press */
 		this->bCameraToggle = true;
 		switch (ECurrentActiveCamera)
 		{
@@ -229,10 +248,12 @@ void entity::Player::PerspectiveCameraToggle()
 	}
 }
 
+/* Cycles Light Intensity */
 void entity::Player::LampToggle()
 {
 	if (this->bKey_F && !this->bLampToggle)
 	{
+		/* Only Read Once Per Press */
 		this->bLampToggle = true;
 		switch (ECurrentLightIntensity)
 		{
@@ -260,8 +281,15 @@ void entity::Player::LampToggle()
 	}
 }
 
+/* Third Person Camera Movement */
 void entity::Player::ThirdPersonMovement(float tDeltaTime)
 {
+	double dDeltaX = this->dCurrentMouseX - this->dPreviousMouseX;
+	double dDeltaY = this->dCurrentMouseY - this->dPreviousMouseY;
+
+	this->dPreviousMouseX = this->dCurrentMouseX;
+	this->dPreviousMouseY = this->dCurrentMouseY;
+
 	/* Same Transforms, Different Local Transfroms : 0 = Mesh, 1 = FPCamera, 2 = TPCamera, 3 = Light */
 	std::vector<Transform*> playerTransforms;
 
@@ -274,15 +302,19 @@ void entity::Player::ThirdPersonMovement(float tDeltaTime)
 	{
 		glm::vec3 movement = playerTransforms[0]->GetForwardVector() * fMoveSpeed * tDeltaTime;
 
+		/* Move Everything Forward - Whatever Forward is */
 		for (Transform* object : playerTransforms)
 		{
 			object->Move(movement);
 		}
 
+		/* Set FP Cam Above the Mesh */
 		playerTransforms[1]->SetPosition(playerTransforms[0]->GetPosition());
 		playerTransforms[1]->SetLocalPosition(glm::vec3(0.0f, 5.0f, 0.0f));
 
+		/* Also Move the center when moving */
 		pThirdPersonCam->MoveCenter(movement);
+		/* Make FPCam to face forward */
 		ResetBinoculars();
 	}
 
@@ -304,26 +336,22 @@ void entity::Player::ThirdPersonMovement(float tDeltaTime)
 
 	if (this->bKey_A)
 	{
-		/* Rotate Mesh Directly */
-		playerTransforms[0]->Rotate(RotationAxis::YAW, fRotationSpeed * tDeltaTime);
+		float rotationAmount = fRotationSpeed * tDeltaTime;
 
-		/*
-		*	Calculate Camera And Light Position Using The Tank's Forward Vector *
-		*	FORMULA:
-		*		NEW_POS = (ForwardVector * Radius * Direction) + Offset
-		*		Radius = Distance Away From Tank
-		*		Direction = if Forward (1), if Backward(-1)
-		*      Offset = Y Offset for TPCamera, because camera is above the object
-		*/
-		playerTransforms[2]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * -10.0f) + glm::vec3(0.0f, 5.0f, 0.0f));
+		/* Rotate Mesh and Third Person Cam */
+		playerTransforms[0]->Rotate(RotationAxis::YAW, rotationAmount);
+		playerTransforms[2]->Rotate(RotationAxis::YAW, rotationAmount);
+
+		/* Set TPCamera To be 10 units behind the mesh + up offset */
+		playerTransforms[2]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * -10.0f)
+			+ glm::vec3(0.0f, 5.0f, 0.0f));
+
+		/* Set FPCamera To be 10 units in front the mesh */
 		playerTransforms[3]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * 10.0f));
 
+		/* Set TPCam Center according to the new forward vector */
+		pThirdPersonCam->SetCenter(playerTransforms[2]->GetPosition() + playerTransforms[2]->GetForwardVector());
 		/* Reset Binoculars To Face The Front */
-		ResetBinoculars();
-
-		/* Set Camera Centers: FPCam always point forward, TPCam always point at tank */
-		
-		pThirdPersonCam->SetCenter(playerTransforms[0]->GetPosition());
 		ResetBinoculars();
 	}
 
@@ -333,14 +361,43 @@ void entity::Player::ThirdPersonMovement(float tDeltaTime)
 
 		playerTransforms[0]->Rotate(RotationAxis::YAW, rotationAmount);
 
-		playerTransforms[2]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * -10.0f) + glm::vec3(0.0f, 5.0f, 0.0f));
+		playerTransforms[2]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * -10.0f)
+			+ glm::vec3(0.0f, 5.0f, 0.0f));
+		playerTransforms[2]->Rotate(RotationAxis::YAW, rotationAmount);
 		playerTransforms[3]->SetLocalPosition((playerTransforms[0]->GetForwardVector() * 10.0f));
 
-		pThirdPersonCam->SetCenter(playerTransforms[0]->GetPosition());
+		pThirdPersonCam->SetCenter(playerTransforms[2]->GetPosition() + playerTransforms[2]->GetForwardVector());
 		ResetBinoculars();
+	}
+
+	/* Rotate the TPCam only: along with its center */
+	/* Mouse Movement */
+	if(dDeltaX > 10.0f)
+	{
+		pThirdPersonCam->GetTransform()->Rotate(RotationAxis::YAW, -fRotationSpeed * tDeltaTime);
+		pThirdPersonCam->SetCenter(playerTransforms[2]->GetPosition() + playerTransforms[2]->GetForwardVector());
+	}
+
+	if (dDeltaX < -10.0f)
+	{
+		pThirdPersonCam->GetTransform()->Rotate(RotationAxis::YAW, fRotationSpeed * tDeltaTime);
+		pThirdPersonCam->SetCenter(playerTransforms[2]->GetPosition() + playerTransforms[2]->GetForwardVector());
+	}
+
+	if (dDeltaY > 10.0f)
+	{
+		pThirdPersonCam->GetTransform()->Rotate(RotationAxis::PITCH, -fRotationSpeed * tDeltaTime);
+		pThirdPersonCam->SetCenter(playerTransforms[2]->GetPosition() + playerTransforms[2]->GetForwardVector());
+	}
+
+	if (dDeltaY < -10.0f)
+	{
+		pThirdPersonCam->GetTransform()->Rotate(RotationAxis::PITCH, fRotationSpeed * tDeltaTime);
+		pThirdPersonCam->SetCenter(playerTransforms[2]->GetPosition() + playerTransforms[2]->GetForwardVector());
 	}
 }
 
+/* Make FPCam have the same rotation as the Mesh, then point the cam forward */
 void entity::Player::ResetBinoculars()
 {
 	glm::vec3 rotation = this->pTank->GetTransform()->GetRotation();
@@ -365,6 +422,7 @@ const glm::vec3 entity::Player::PointForward()
 	return Forward;
 }
 
+/* Return Camera Data depending on active camera */
 CameraData Player::GetCameraData()
 {
 	CameraData cameraData;

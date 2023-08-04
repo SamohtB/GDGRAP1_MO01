@@ -75,6 +75,12 @@ namespace entity
 			bool bCameraToggle;
 			bool bTopToggle;
 
+			double dCurrentMouseX;
+			double dCurrentMouseY;
+
+			double dPreviousMouseX;
+			double dPreviousMouseY;
+
 		private:
 			const float fZoomSpeed = 50.0f;
 			const float fMoveSpeed = 100.0f;
