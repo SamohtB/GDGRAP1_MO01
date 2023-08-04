@@ -106,6 +106,9 @@ void Clutter::Draw(CameraData cameraData, LightData pointLight, LightData direct
     GLuint dirIntensityLoc = glGetUniformLocation(this->shader->GetShaderProgram(), "dirLightIntensity");
     glUniform1f(dirIntensityLoc, directionalLight.intensity);
 
+    GLuint dirNV = glGetUniformLocation(this->shader->GetShaderProgram(), "NV");
+    glUniform1i(dirNV, cameraData.isFPS);
+
     glBindVertexArray(model->GetVAO());
 
     glDrawArrays(GL_TRIANGLES, 0, model->GetVertexData().size() / 11);

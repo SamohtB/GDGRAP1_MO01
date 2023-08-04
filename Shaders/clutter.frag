@@ -21,6 +21,7 @@ uniform float directionalLightSpecPhong;
 uniform float dirLightIntensity;
 
 uniform vec3 cameraPos;
+uniform bool NV;
 
 in vec2 texCoord;
 in vec3 normCoord;
@@ -85,6 +86,11 @@ void main()
 	vec3 directionalLight = CalculateDirectionalLight();
 
 	vec3 finalColor = pointLight + directionalLight;
+
+	if(NV)
+	{
+		finalColor *= vec3(0.1, 0.95, 0.2);
+	}
 
 	FragColor = vec4(finalColor, 1.0) * pixelColor;
 }

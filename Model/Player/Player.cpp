@@ -436,14 +436,17 @@ CameraData Player::GetCameraData()
 	{
 		case ActiveCamera::THIRDPERSON:
 			cameraData = this->pThirdPersonCam->GetCameraData();
+			cameraData.isFPS = false;
 			break;
 
 		case ActiveCamera::FIRSTPERSON:
 			cameraData = this->pFirstPersonCam->GetCameraData();
+			cameraData.isFPS = true;
 			break;
 
 		case ActiveCamera::BIRDSEYE:
 			cameraData = this->pBirdEyeCam->GetCameraData();
+			cameraData.isFPS = false;
 			break;
 	}
 
