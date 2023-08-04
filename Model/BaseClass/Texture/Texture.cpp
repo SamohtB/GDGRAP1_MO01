@@ -35,6 +35,10 @@ void Texture::LoadTexture(std::string strTex)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex_bytes);
     }
+    else if (strFileType == "tga")
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex_bytes);
+    }
 
     glGenerateMipmap(GL_TEXTURE_2D);
 
