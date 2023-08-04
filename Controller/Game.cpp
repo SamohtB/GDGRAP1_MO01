@@ -77,20 +77,20 @@ void Controller::Game::CreateClutter()
     }
 
     clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/Dumpster.obj", "3D/Clutter/dumptex.jpg",
+    clutter->Initialize("3D/Clutter/barrier.obj", "3D/Clutter/barrier.jpg",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
-    clutter->GetTransform()->SetPosition(-250.0f, -5.0f, 300.0f);
+    clutter->GetTransform()->SetPosition(-250.0f, 0.0f, 300.0f);
     clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
-    clutter->GetTransform()->SetScale(0.1f);
+    clutter->GetTransform()->SetScale(3.f);
 
     clutterList.push_back(clutter);
 
     clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/Dumpster.obj", "3D/Clutter/dumptex.jpg",
+    clutter->Initialize("3D/Clutter/spider.obj", "3D/Clutter/spider.png",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
     clutter->GetTransform()->SetPosition(-250.0f, -5.0f, 400.0f);
     clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
-    clutter->GetTransform()->SetScale(0.1f);
+    clutter->GetTransform()->SetScale(3.f);
 
     clutterList.push_back(clutter);
 
