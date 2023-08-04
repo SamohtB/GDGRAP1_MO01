@@ -42,11 +42,11 @@ void Controller::Game::CreateClutter()
 
     /* Trash */
     clutter = new Clutter();
-    clutter->Initialize("3D/Clutter/barrier.obj", "3D/Clutter/barrier.jpg",
+    clutter->Initialize("3D/Clutter/Dumpster.obj", "3D/Clutter/dumptex.jpg",
         "Shaders/clutter.vert", "Shaders/clutter.frag");
     clutter->GetTransform()->SetPosition(35.0f, -3.0f,150.0f);
     clutter->GetTransform()->SetRotation(RotationAxis::YAW, -90.0f);
-    clutter->GetTransform()->SetScale(5.0f);
+    clutter->GetTransform()->SetScale(0.1f);
 
     clutterList.push_back(clutter);
 
