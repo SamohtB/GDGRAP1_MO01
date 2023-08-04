@@ -36,6 +36,10 @@ void Environment::Draw(CameraData data)
     unsigned int skyViewLoc = glGetUniformLocation(this->shader->GetShaderProgram(), "view");
     glUniformMatrix4fv(skyViewLoc, 1, GL_FALSE, glm::value_ptr(sky_view));
 
+    /* BOOL: IF TRUE NIGHT VISION GREEN, IF FALSE NOTHING HAPPENS */
+    GLuint dirNV = glGetUniformLocation(this->shader->GetShaderProgram(), "NV");
+    glUniform1i(dirNV, data.isFPS);
+
     glBindVertexArray(this->skybox->GetVAO());
 
     glActiveTexture(GL_TEXTURE0);

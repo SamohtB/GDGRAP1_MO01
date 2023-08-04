@@ -109,6 +109,7 @@ void Tank::Draw(CameraData cameraData, LightData pointLight, LightData direction
     GLuint dirIntensityLoc = glGetUniformLocation(this->shader->GetShaderProgram(), "dirLightIntensity");
     glUniform1f(dirIntensityLoc, directionalLight.intensity);
 
+    /* BOOL: IF TRUE NIGHT VISION GREEN, IF FALSE NOTHING HAPPENS */
     GLuint dirNV = glGetUniformLocation(this->shader->GetShaderProgram(), "NV");
     glUniform1i(dirNV, cameraData.isFPS);
 
